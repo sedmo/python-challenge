@@ -1,7 +1,8 @@
 import math
 from datetime import date, timedelta
 from scipy import special
-
+from sys import maxsize
+import itertools
 
 def sphere_volume(r):
     """ a function that computes the volume of a sphere, given its radius r. """
@@ -38,7 +39,8 @@ def draw_pascal(n):
         print()
 
 
-# euler(): returns the unique positive integer whose square has the form 1_2_3_4_5_6_7_8_9_0, where each "_" is a single digit.
+def euler():
+    """ returns the unique positive integer whose square has the form 1_2_3_4_5_6_7_8_9_0, where each "_" is a single digit."""
 
 
 def days(date1, date2):
@@ -74,9 +76,16 @@ def replicate(lst, n):
     list_of_lists = [list(rep_helper(a, n)) for a in lst]
     return [val for sublist in list_of_lists for val in sublist]
 
-# split_list(lst, n): split lst into two parts with the first part having n elements, and return a list that contains these two parts.
 
-# min_max_median(lst): a function that takes a simple list of numbers lst as a parameter and returns a list with the min, max, and the median of lst. Can you devise an algorithm that has an expected linear running time?
+def split_list(lst, n):
+    """ split lst into two parts with the first part having n elements, and return a list that contains these two parts. """
+    return [ lst[:n+1], lst[n+2:] ]
+
+def min_max_median(lst):
+    """ a function that takes a simple list of numbers lst as a parameter and returns a list with the min, max, and the median of lst. """
+    s = sorted(lst)
+    n = len(s)
+    return [ s[0], s[-1], s[n//2] if n % 2 == 1  else (s[n//2 - 1] + s[n//2]) / 2]
 
 
 def bc(n, k):
@@ -85,6 +94,26 @@ def bc(n, k):
     return special.binom(n, k)
 
 
-# subsets(s, n): return the set of n-element subsets of s.
+def subsets(s, n):
+    """ return the set of n-element subsets of s. """
+    return list(itertools.combinations(s, n)) 
 
-# max_subarray(arr): return a contiguous subarray within arr which has the largest sum.
+def max_subarray(arr):
+    """ return a contiguous subarray within arr which has the largest sum. """
+    max_so_far = -maxsize - 1
+    max_ending_here = 0
+    max_itr = 0
+    min_itr = 0
+
+    for i in range(0, len(arr)):
+        max_ending_here = max_ending_here + arr[i]
+        if (max_so_far < max_ending_here):
+            max_so_far = max_ending_here
+            temp = i
+        if (temp > max_itr):
+            min_itr = max_itr
+            max_itr = temp
+
+        if max_ending_here < 0:
+            max_ending_here = 0
+    return arr[min_itr:max_itr + 1]
